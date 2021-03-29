@@ -27,7 +27,7 @@ func Init(key []byte) (*XChaCha20Poly1305, error) {
 	return x, nil
 }
 
-func (x XChaCha20Poly1305) Seal(data []byte) []byte {
+func (x *XChaCha20Poly1305) Seal(data []byte) []byte {
 	buf := make([]byte, 24+len(data)+x.aead.Overhead())
 	io.ReadFull(rand.Reader, buf[:24])
 	encrypted := x.aead.Seal(nil, buf[:24], data, nil)
@@ -35,6 +35,6 @@ func (x XChaCha20Poly1305) Seal(data []byte) []byte {
 	return buf
 }
 
-func (x XChaCha20Poly1305) Open(data []byte) ([]byte, error) {
+func (x *XChaCha20Poly1305) Open(data []byte) ([]byte, error) {
 	return x.aead.Open(nil, data[:24], data[24:], nil)
 }
